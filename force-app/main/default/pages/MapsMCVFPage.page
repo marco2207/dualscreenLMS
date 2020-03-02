@@ -61,6 +61,6 @@
           }
 
     </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAnVb6Stpw8Klp3tHSTOtkJtMxin04B1ao&callback=initMap"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=PUT-YOUR-KEY-HERE&callback=initMap"></script>
 
 </apex:page>
