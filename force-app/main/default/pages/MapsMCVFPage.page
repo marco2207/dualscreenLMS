@@ -1,0 +1,66 @@
+<apex:page standardController="Account" docType="html-5.0" showHeader="false" sidebar="false" standardStylesheets="false" >
+    <style>
+      #map {
+        width: 100%;
+        height: 400px;
+      }
+    </style>
+
+    <div id="map">Loading map ...</div>
+
+    <script>
+        // Load the MessageChannel token in a variable
+        var lmsDemoChannel = "{!$MessageChannel.LMSDemoWin__c}";
+        var subscriptionToMC;
+
+        function subscribeMC() {
+            if (!subscriptionToMC) {
+                subscriptionToMC = sforce.one.subscribe(lmsDemoChannel, onMCPublished, { scope: "APPLICATION" });
+            }
+        }
+
+        renderMap = function (canvas, latitude, longitude) {
+            var latLng = {lat: latitude, lng: longitude};
+            var map = new google.maps.Map(canvas, {
+                center: latLng,
+                zoom: 14
+            });
+            var marker = new google.maps.Marker({
+                position: latLng,
+                map: map,
+                title: 'Codogno is Here'
+            });
+        }
+
+        function onMCPublished(message) {
+            var mapDiv = document.getElementById('map');
+            renderMap(mapDiv, 52.5159, 13.3777);
+            
+        }
+
+        function initMap() {
+            var mapDiv = document.getElementById('map');
+
+            subscribeMC();
+    
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function (position) {
+                        renderMap(mapDiv, position.coords.latitude, position.coords.longitude);
+
+                    },
+                    function(error) {
+                        document.getElementById('map').innerHTML = 'Error:' + error.code + ' x ' + error.message;
+                    }
+                );
+                
+            } else {
+                document.getElementById('map').innerHTML = 'Geolocation not supported';
+            }
+    
+          }
+
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAnVb6Stpw8Klp3tHSTOtkJtMxin04B1ao&callback=initMap"></script>
+
+</apex:page>
